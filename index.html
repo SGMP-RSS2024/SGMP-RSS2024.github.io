@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Spatially-grounded parameterized motion primitives enables better geometric reasoning in manipulation.">
+  <meta name="keywords" content="Spatially-grounded motion primitives">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SPGM</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script>
+	window.dataLayer = window.dataLayer || [];
+
+	function gtag() {
+	  dataLayer.push(arguments);
+	}
+
+	gtag('js', new Date());
+
+	gtag('config', 'G-PYVRSFMDRL');
+	
+	// Change Video
+	const successObjectList = [
+		"./static/videos/real_world_per_objects/cup",
+    "./static/videos/real_world_per_objects/tennis",
+    "./static/videos/real_world_per_objects/bowl",
+    "./static/videos/real_world_per_objects/cube",
+	];
+	  
+	const failureObjectList = [
+		"./static/demos/failure/failure-1",
+		"./static/demos/failure/failure-2",
+		"./static/demos/failure/failure-3"
+	];
+	
+	const simObjectList = [
+		"./static/demos/sim/tape",
+		"./static/demos/sim/cup",
+		"./static/demos/sim/cube",
+		"./static/demos/sim/pillbottle",
+		"./static/demos/sim/teapot",
+	]
+	  
+	const failureTextList = [
+		"In this example, the estimated goal and the actual goal are not well aligned. The robot moves the object to the wrong estimated goal and achieves a “flow success”. Thus, it does not count as an actual success in our paper.",
+		"In this example, the action output from the policy tries to push the box down with multiple attempts. However, it sometimes misses the contact location potentially due to calibration error or inaccuracy of the low-level controller.",
+		"The robot tries to flip the mug by pushing at the bottom edge of the mug. However, such a motion might be difficult to execute due to the low surface friction of the mug. Also, the mug sometimes “jumps” away potentially due to low surface friction between the mug and the bin. Although eventually the robot is able to flip the mug upright, it fails to move the mug to the goal pose within the episode limit (10 steps)."
+	];
+	  
+	function switchSuccessVideo() {
+		var object = document.successObjectForm.switch.options[document.successObjectForm.switch.selectedIndex].value;
+		var videoList = Array();
+		
+//		document.getElementById("test_text").textContent= "abc";
+		document.getElementById("real_video_success").src = successObjectList[object] + ".mp4";
+//		document.getElementById("real_plot_success").src = successObjectList[object] + ".html";
+//		document.getElementById("test_text").textContent= successObjectList[object];
+	}
+	  
+	function switchFailureVideo() {
+		var object = document.failureObjectForm.switch.options[document.failureObjectForm.switch.selectedIndex].value;
+		var videoList = Array();
+		
+		document.getElementById("real_video_failure").src = failureObjectList[object] + ".mp4";
+//		document.getElementById("real_plot_failure").src = failureObjectList[object] + ".html";
+		document.getElementById("failure-text").textContent= failureTextList[object];
+	}
+	
+	function switchSimVideo() {
+		var object = document.simObjectForm.switch.options[document.simObjectForm.switch.selectedIndex].value;
+		var videoList = Array();
+		
+		document.getElementById("sim_video").src = simObjectList[object] + ".mp4";
+		document.getElementById("sim_plot").src = simObjectList[object] + ".html";
+//		document.getElementById("failure-text").textContent= failureTextList[object];
+	}
+	  
+	 
+	 
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="./index.html">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">Spatially-Grounded Motion Primitives for Manipulation</h1>
+		  <div class="is-size-5 publication-authors">
+        <span class="author-block">
+				Anonymous Submissionn</span>
+      </div>
+
+		  <div class="column has-text-centered">
+            <div class="publication-links">
+				<span class="link-block">
+					<a href="./static/hacman_camera_ready.pdf"
+					   class="external-link button is-normal is-rounded is-dark">
+					  <span class="icon">
+						  <i class="fas fa-file-pdf"></i>
+					  </span>
+					  <span>Paper</span>
+					</a>
+				</span>
+				<span class="link-block">
+				<a class="external-link button is-normal is-rounded is-dark">
+					<span class="icon">
+						<i class="fab fa-github"></i>
+					</span>
+					<span>Code (Coming Soon)</span>
+					</a>
+				</span>
+            </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body has-text-centered">
+      <video id="teaser" autoplay muted loop playsinline width="100%">
+        <source src="./static/videos/all.mp4"
+                type="video/mp4">
+      </video>
+		<br>
+      <h2 class="subtitle has-text-centered">
+        Spatially-grounded parameterized motion primitives enables better geometric reasoning in manipulation, generalizing to real-world unseen objects.
+      </h2>
+    </div>
+  </div>
+</section>
+
+
+<!-- <section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item item-blueshirt">
+          <video poster="" id="blueshirt" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/sim/video_32_134000_4_success.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+		<div class="item item-steve">
+          <video poster="" id="steve" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/sim/video_1_134000_8_success.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-chair-tp">
+          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/sim/video_10_134000_7_success.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-shiba">
+          <video poster="" id="shiba" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/sim/video_11_134000_9_success.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-fullbody">
+          <video poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/sim/video_13_134000_6_success.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-mask">
+          <video poster="" id="mask" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/sim/video_23_134000_2_success.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-coffee">
+          <video poster="" id="coffee" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/sim/video_27_134000_2_success.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+
+<section class="section" style="background-color:#f0f0f0">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          	<p>
+              Although end-to-end robot learning has shown some success for robot manipulation, the learned policies are often not sufficiently robust to variations in object pose or geometry. To improve the policy generalization, we introduce spatially-grounded parameterized motion primitives. Specifically, we propose an action representation consisting of three components: what primitive type (such as grasp or push) to execute, where the primitive will be grounded (e.g. where the gripper will make contact with the world), and how the primitive motion is executed, such as parameters specifying the push direction or grasp orientation. These three components define a novel discrete-continuous action space for reinforcement learning. Our framework enables robot agents to learn to chain diverse motion primitives together and select appropriate primitive parameters to complete long-horizon manipulation tasks. By grounding the primitives on a spatial location in the environment, our method is able to effectively generalize across object shape and pose variations. Our approach significantly outperforms existing methods, particularly in complex scenarios demanding both high-level sequential reasoning and object generalization. With zero-shot sim-to-real transfer, our policy succeeds in challenging real-world manipulation tasks, with generalization to unseen objects.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br><br>
+</section>
+<br>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Animation. -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+	  	<h2 class="title is-3"><span> Method Overview </span></h2>
+		  <!-- <h3 class="title is-4"> <span class="dnerf">Hybrid Actor-Critic maps for MANipulation </span> </h3> -->
+	  	<br>
+    <img src="static/figures/cover.png" alt="Cover Figure">
+    <p>
+      Our method consists of a library of parameterized, \emph{spatially-grounded} motion primitives (left), consisting of a primitive type, primitive  location (where the primitive will be grounded), and primitive parameters.  These three components form the action space for a policy that we train with reinforcement learning.  Our method learns to select a sequence of primitives (and their corresponding locations and parameters) to perform a long-horizon manipulation task.  In the task shown here, the object is placed in one bin in an initial pose, and it must be moved into a second bin in a target pose. At the top, we visualize the spatial grounding for the selected primitive; for each point we visualize the learned Q-value of selecting that point in the form of heatmaps as the grounding location for each primitive.
+    </p>
+    <br>
+		<img src="static/figures/method.png" alt="Method Figure">
+		<br><br>
+		<p>
+			Our method processes a point cloud to estimate a set of per-point primitive parameters \(a_i^m\) for each point \(x_i\) in the point cloud and for each primitive in our primitive set. We then compute a set of "Critic Maps" (one per primitive) which estimate the Q-value \(Q_{i,k}\) of using each primitive \(k\), grounded at each point \(x_i\), and parameterized by the estimated primitive parameters \(a_i^m\).  We either sample from the Critic Map (during training) or choose the point and primitive with the highest score (during evaluation) for robot execution.
+		</p>
+	</div>
+		
+	</div>
+  </div>
+</section>
+
+<!--	Real Robot Success-->
+<section class="section">
+  <div class="container is-max-desktop">
+	<div class="columns is-centered">
+    <div class="column is-full-width">
+		  <h2 class="title is-3"><span> Robot Experiments </span></h2>
+    </div>
+	</div>
+  </div>
+	<br>
+	
+	
+	<!-- <div class="columns is-centered">
+		<h3 class="title is-4"> Successes </h3>
+	</div> -->
+	<br>
+	
+	<div class="columns is-centered">
+    <h1 class="title is-5"> Select object: &nbsp </h1>
+		<!-- <p>
+			
+	  </p> -->
+	  <form method="" action="" name="successObjectForm">
+		<select size="1" name="switch" onchange="switchSuccessVideo();">
+			<option value="1">Cup</option>
+			<option value="2">Tennis Bowl</option>
+			<option value="3">Bowl</option>
+			<option value="4">Rubik's Cube</option>
+		</select>
+		</form>
+	</div>
+</section>
+
+	
+<!--	success video-->
+<div class="container is-centered is-max-desktop">
+	<video id="real_video_success"
+		 controls
+		 muted
+		 preload
+		 playsinline
+     autoplay
+     loop
+		 width="100%">
+		<source src="./static/videos/real_world_per_objects/cup.mp4"
+				type="video/mp4">
+	</video>
+<!--	<embed type="text/html" src="./static/demos/success/blue-cup.html" width="35%" height="500" id="real_plot_success">-->
+</div>
+<br>
+
+	
+
+<section class="section">
+	<div class="columns is-centered">
+		<h2 class="title is-3"><span class="dnerf"> Sim Results&nbsp; </span> with Interactive Visualizations&nbsp; </h2>
+	</div>
+	<br>
+	
+	<div class="container is-max-desktop has-text-centered">
+		<span>
+			<b> Interactive Visuliazation: </b>&nbsp; Drag the slider to visualize different timesteps. 
+			Click on the legends <strong>on the plot</strong> to show/hide elements.
+		</span>
+	</div>
+  	<br>
+	
+<!--
+	<div class="columns is-centered">
+		<h3 class="title is-4"> Notations </h3>
+	</div>
+-->
+	
+	<!-- <div class="container is-max-desktop">
+	  <img src="static/figures/plotly_notations.png" alt="Legend notations">
+	</div>
+	<br> -->
+	
+	<div class="columns is-centered">
+	<p>
+	  Object: &nbsp; </p>
+	<form method="" action="" name="simObjectForm">
+	<select size="1" name="switch" onchange="switchSimVideo();">
+		<option value="0">Tape</option>
+		<option value="1">Cup</option>
+		<option value="2">Cube</option>
+		<option value="3">Pill Bottle</option>
+		<option value="4">Teapot</option>
+	</select>
+	</form>
+	</div>
+	
+	
+</section>
+
+<div class="is-centered columns">
+	<video id="sim_video"
+		 controls
+		 muted
+		 preload
+		 playsinline
+		 height="640px"
+		 width="55%">
+		<source src="./static/demos/sim/tape.mp4"
+				type="video/mp4">
+	</video>
+	<embed type="text/html" src="./static/demos/sim/tape.html" width="40%" height="640px" id="sim_plot">
+</div>
+	
+<br> <br>
+
+
+<!-- <section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@inproceedings{zhou2023hacman,
+  title     = {HACMan: Learning Hybrid Actor-Critic Maps for 6D Non-Prehensile Manipulation},
+  author    = {Zhou, Wenxuan and Jiang, Bowen and Yang, Fan and Paxton, Chris and Held, David},
+  journal   = {Conference on Robot Learning (CoRL)},
+  year      = {2023},
+}</code></pre>
+  </div>
+</section> -->
+
+
+
+<footer class="footer">
+  <div class="container">
+<!--
+    <div class="content has-text-centered">
+      <a class="icon-link"
+         href="./static/videos/nerfies_paper.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+-->
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            Website template borrowed from <a href="https://github.com/nerfies/nerfies.github.io">NeRFies</a> and <a href="https://hacman-2023.github.io/">HACMan</a>.
+			</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
